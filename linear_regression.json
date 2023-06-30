@@ -1,0 +1,1 @@
+{"coefficients": [-0.12950682311282646, -0.04559626727815991, 0.2647781740693186, 0.5328833732562726], "intercept": 0.2508432994813877, "feature_names": ["SepalLengthCm", "SepalWidthCm", "PetalLengthCm", "PetalWidthCm"], "target_names": ["Iris-setosa", "Iris-versicolor", "Iris-virginica"]}

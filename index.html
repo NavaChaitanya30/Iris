@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>ML Model Deployment</title>
+  <style>
+    /* CSS styling for the form */
+    body {
+      font-family: Arial, sans-serif;
+    }
+    h1 {
+      text-align: center;
+    }
+    form {
+      width: 300px;
+      margin: 0 auto;
+    }
+    label {
+      display: block;
+      margin-bottom: 10px;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 5px;
+      margin-bottom: 10px;
+    }
+    input[type="submit"] {
+      width: 100%;
+      padding: 10px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>ML Model Deployment</h1>
+  <form id="inputForm">
+    <label for="sepalLength">Sepal Length:</label>
+    <input type="text" id="sepalLength" required>
+  
+    <label for="sepalWidth">Sepal Width:</label>
+    <input type="text" id="sepalWidth" required>
+  
+    <label for="petalLength">Petal Length:</label>
+    <input type="text" id="petalLength" required>
+  
+    <label for="petalWidth">Petal Width:</label>
+    <input type="text" id="petalWidth" required>
+  
+    <input type="submit" value="Submit" onclick="validateAndPredict(event)">
+  </form>
+
+  <div id="result" style="display: none;">
+    <h2>Prediction Result:</h2>
+    <p id="prediction"></p>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ml5/1.0.0/ml5.min.js"></script>
+  <script>
+    async function loadModel() {
+      const modelResponse = await fetch('linear_regression.json');
+      const modelData = await modelResponse.json();
+
+      // Create a new linear regression model from the JSON data
+      const model = new ML5LinearRegression(modelData);
+
+      return model;
+    }
+
+    async function validateAndPredict(event) {
+      event.preventDefault();
+
+      const sepalLength = parseFloat(document.getElementById('sepalLength').value);
+      const sepalWidth = parseFloat(document.getElementById('sepalWidth').value);
+      const petalLength = parseFloat(document.getElementById('petalLength').value);
+      const petalWidth = parseFloat(document.getElementById('petalWidth').value);
+
+      if (isNaN(sepalLength) || isNaN(sepalWidth) || isNaN(petalLength) || isNaN(petalWidth)) {
+        alert('Please enter valid numeric values for all input fields.');
+        return;
+      }
+
+      const model = await loadModel();
+
+      const inputData = {
+        SepalLengthCm: sepalLength,
+        SepalWidthCm: sepalWidth,
+        PetalLengthCm: petalLength,
+        PetalWidthCm: petalWidth
+      };
+
+      const prediction = model.predict(inputData);
+
+      const resultDiv = document.getElementById('result');
+      const predictionElem = document.getElementById('prediction');
+      predictionElem.textContent = `Predicted Species: ${prediction}`;
+      resultDiv.style.display = 'block';
+    }
+  </script>
+</body>
+</html>
